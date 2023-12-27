@@ -6,7 +6,11 @@ const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   console.log("reached 1");
   console.log(req.body);
-
+  const tempuser = {
+    username: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
   const user = await User.create(tempuser);
 
   console.log("reached 1");
