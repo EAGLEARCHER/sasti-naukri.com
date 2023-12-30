@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { showStats } from "../../features/allJobs/allJobsSlice";
 
 function Stats() {
-  const { isLoading, monthlyApplications } = useSelector(
-    (store) => store.allJobs
-  );
+  //tbc
+  // const { isLoading, monthlyApplications } = useSelector(
+  //   (store) => store.allJobs
+  // );
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -15,7 +16,7 @@ function Stats() {
   return (
     <>
       <StatsContainer />
-      {monthlyApplications.length > 0 && <ChartsContainer />}
+      {/* {monthlyApplications.length > 0 && <ChartsContainer />} */}
     </>
   );
 }
