@@ -1,13 +1,14 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const app = express();
 
-app.use(cors())
+app.use(cors());
 // Database connection file/function
 const database = require("./db/connect");
 
+const authenticateUser = require("./middleware/authentication");
 // Importing routes files
 const authRoute = require("./routes/auth-route");
 const jobsRoute = require("./routes/jobs-route");
@@ -17,7 +18,7 @@ app.use(express.json());
 
 // Routes
 app.use("/auth", authRoute);
-app.use("/jobs", jobsRoute);
+app.use("/jobs", authenticateUser, jobsRoute);
 
 // Error handling middleware
 const notFoundMiddleware = require("./middleware/route-not-found");

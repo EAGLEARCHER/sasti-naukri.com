@@ -14,7 +14,7 @@ const deleteJob = async (req, res) => {
   res.send("delete job sucessfull....");
 };
 const createJob = async (req, res) => {
-  res.send("create job sucessfull....");
+  res.json(req.user);
 };
 
 module.exports = { getAllJobs, createJob, getJob, editJob, deleteJob };
