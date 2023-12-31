@@ -1,55 +1,69 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
-const { BadRequestError } = require("../errors");
+const { BadRequestError, UnauthenticatedError } = require("../errors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    // Check if the email already exists in the database
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "Email already exists" });
-    }
-
-    // Hash the password before storing it in the database
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const newUser = await User.create({
-      username: name,
-      email,
-      password: hashedPassword,
-    });
-
-    console.log(newUser);
-    res.status(StatusCodes.CREATED).json(newUser);
-  } catch (error) {
-    // Handle any unexpected errors
-    console.error("Error creating user:", error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      error: "Could not register user",
-    });
-  }
+  const user = await User.create({ ...req.body });
+  const token = user.createJWT();
+  res.status(StatusCodes.CREATED).json({
+    user: {
+      email: user.email,
+      lastName: user.lastName,
+      location: user.location,
+      name: user.name,
+      token,
+    },
+  });
 };
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Find the user with the provided email address
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "invalid credentials.....", user: req.body });
-      throw new BadRequestError("Invalid credentials");
+    if (!email || !password) {
+      throw new BadRequestError("Please provide credentials.....");
     }
-  } catch {}
-  res.send("Login successful");
+
+    // Find the user with the provided email address
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new UnauthenticatedError("Invalid Credentials...");
+    }
+
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      throw new UnauthenticatedError("Invalid Password");
+    }
+
+    // Generate and assign a token to the user
+    const token = await user.createJWT();
+
+    res.status(StatusCodes.OK).json({
+      user: {
+        email: user.email,
+        lastName: user.lastName,
+        location: user.location,
+        name: user.username,
+        token,
+      },
+    });
+  } catch (error) {
+    // Send an appropriate response to the client when an error occurs
+    if (
+      error instanceof BadRequestError ||
+      error instanceof UnauthenticatedError
+    ) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: error.message });
+    } else {
+      console.error(error);
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Internal Server Error" });
+    }
+  }
 };
 
 module.exports = { register, login };

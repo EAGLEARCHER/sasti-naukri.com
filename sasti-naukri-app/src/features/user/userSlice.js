@@ -78,7 +78,9 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, { payload }) => {
+        console.log("payload",payload);
         const { user } = payload;
+        console.log("user", user)
         state.isLoading = false;
         state.user = user;
         addUserToLocalStorage(user);
