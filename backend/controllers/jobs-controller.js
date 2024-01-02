@@ -16,5 +16,15 @@ const deleteJob = async (req, res) => {
 const createJob = async (req, res) => {
   res.json(req.user);
 };
+const getAllStats = async (req, res) => {
+  res.json({msg:"all stats..."});
+};
 
-module.exports = { getAllJobs, createJob, getJob, editJob, deleteJob };
+module.exports = {
+  getAllStats,
+  getAllJobs,
+  createJob,
+  getJob,
+  editJob,
+  deleteJob,
+};

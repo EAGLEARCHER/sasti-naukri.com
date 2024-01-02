@@ -18,7 +18,11 @@ app.use(express.json());
 
 // Routes
 app.use("/auth", authRoute);
-app.use("/jobs", authenticateUser, jobsRoute);
+app.use(
+  "/jobs",
+   authenticateUser,
+  jobsRoute
+);
 
 // Error handling middleware
 const notFoundMiddleware = require("./middleware/route-not-found");
