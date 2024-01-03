@@ -8,8 +8,6 @@ export const removeUserFromLocalStorage = () => {
 
 export const getUserFromLocalStorage = () => {
   const result = localStorage.getItem('user');
-  console.log(result);
   const user = result ? JSON.parse(result) : null;
-
   return user;
 };

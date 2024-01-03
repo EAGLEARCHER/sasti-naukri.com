@@ -11,7 +11,6 @@ customFetch.interceptors.request.use((config) => {
   if (user) {
     config.headers['Authorization'] = `Bearer ${user.token}`
   }
-  // console.log(config);
   return config
 })
 

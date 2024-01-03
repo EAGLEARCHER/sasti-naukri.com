@@ -61,10 +61,8 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
-        console.log(payload);
-        const  user  = payload;
+        const user = payload;
 
-        console.log(user);
         state.isLoading = false;
         state.user = user;
         addUserToLocalStorage(user);
@@ -78,9 +76,7 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, { payload }) => {
-        console.log("payload",payload);
         const { user } = payload;
-        console.log("user", user)
         state.isLoading = false;
         state.user = user;
         addUserToLocalStorage(user);

@@ -9,7 +9,7 @@ export const getAllJobsThunk = async (_, thunkAPI) => {
     url = url + `&search=${search}`;
   }
   try {
-    console.log(1);
+    
     const resp = await customFetch.get(url);
     return resp.data;
   } catch (error) {
