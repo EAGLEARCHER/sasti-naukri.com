@@ -5,9 +5,9 @@ import { showStats } from "../../features/allJobs/allJobsSlice";
 
 function Stats() {
   //tbc
-  // const { isLoading, monthlyApplications } = useSelector(
-  //   (store) => store.allJobs
-  // );
+  const { isLoading, monthlyApplications } = useSelector(
+    (store) => store.allJobs
+  );
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -16,7 +16,7 @@ function Stats() {
   return (
     <>
       <StatsContainer />
-      {/* {monthlyApplications.length > 0 && <ChartsContainer />} */}
+      {monthlyApplications.length > 0 && <ChartsContainer />}
     </>
   );
 }
