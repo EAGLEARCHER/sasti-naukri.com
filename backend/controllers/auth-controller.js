@@ -5,17 +5,24 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  const user = await User.create({ ...req.body });
-  const token = user.createJWT();
-  res.status(StatusCodes.CREATED).json({
-    user: {
-      email: user.email,
-      lastName: user.lastName,
-      location: user.location,
-      name: user.name,
-      token,
-    },
-  });
+  try {
+    const user = await User.create(req.body);
+    const token = user.createJWT();
+    res.status(StatusCodes.CREATED).json({
+      user: {
+        userId: _id,
+        email: user.email,
+        name: user.username,
+        token,
+      },
+    });
+  } catch (error) {
+    // Handle error if user creation fails
+    console.error(error);
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Registration failed" });
+  }
 };
 
 const login = async (req, res) => {
@@ -33,7 +40,10 @@ const login = async (req, res) => {
 
     const isPasswordCorrect = await user.comparePassword(password);
     if (!isPasswordCorrect) {
-      throw new UnauthenticatedError("Invalid Password");
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ msg: "Invalid Password" });
+      // throw new UnauthenticatedError("Invalid Password");
     }
 
     // Generate and assign a token to the user
@@ -41,6 +51,7 @@ const login = async (req, res) => {
 
     res.status(StatusCodes.OK).json({
       user: {
+        userId: user._id,
         email: user.email,
         lastName: user.lastName,
         location: user.location,
@@ -65,5 +76,49 @@ const login = async (req, res) => {
     }
   }
 };
+const updateUser = async (req, res) => {
+  try {
+    const { userId, email, name, lastName, location } = req.body;
+    // Validation check for required fields
+    if (!email || !name || !lastName || !location) {
+      throw new BadRequestError("Please provide all values");
+    }
 
-module.exports = { register, login };
+    const user = await User.findOne({ _id: userId });
+
+    // Update user information
+    user.email = email;
+    user.name = name;
+    user.lastName = lastName;
+    user.location = location;
+
+    // Save the updated user details
+    await user.save();
+
+    // Create a new JWT token after updating user details
+    const token = user.createJWT();
+
+    // Send the updated user details along with the new token in the response
+    res.status(StatusCodes.OK).json({
+      user: {
+        email: user.email,
+        lastName: user.lastName,
+        location: user.location,
+        name: user.name,
+        token,
+      },
+    });
+  } catch (error) {
+    // Handle errors if the user information cannot be updated
+    console.error(error);
+    if (error instanceof BadRequestError) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    } else {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Unable to update user information" });
+    }
+  }
+};
+
+module.exports = { register, login, updateUser };

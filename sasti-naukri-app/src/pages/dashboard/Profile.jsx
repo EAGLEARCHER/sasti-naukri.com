@@ -9,6 +9,7 @@ function Profile() {
   const { isLoading, user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
+    userId: user.userId,
     name: user?.name || "",
     email: user?.email || "",
     lastName: user?.lastName || "",
