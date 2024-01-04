@@ -36,7 +36,7 @@ function Register() {
       dispatch(loginUser({ email: email, password: password }));
       return;
     }
-    dispatch(registerUser({ name, email, password }));
+    dispatch(registerUser({ username:name, email, password }));
   };
 
   const toggleMember = () => {
@@ -46,7 +46,7 @@ function Register() {
     if (user) {
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 1300);
     }
   }, [user]);
   return (

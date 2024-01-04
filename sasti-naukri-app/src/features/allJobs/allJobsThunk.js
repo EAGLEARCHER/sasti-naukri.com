@@ -1,4 +1,4 @@
-import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
+import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 
 export const getAllJobsThunk = async (_, thunkAPI) => {
   const { page, search, searchStatus, searchType, sort } =
@@ -9,19 +9,17 @@ export const getAllJobsThunk = async (_, thunkAPI) => {
     url = url + `&search=${search}`;
   }
   try {
-    
     const resp = await customFetch.get(url);
     return resp.data;
   } catch (error) {
-    console.log('Error in getting all jobs: ', error);
+    console.log("Error in getting all jobs: ", error);
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
 
 export const showStatsThunk = async (_, thunkAPI) => {
   try {
-    const resp = await customFetch.get('/jobs/stats');
-
+    const resp = await customFetch.get("/jobs/stats");
     return resp.data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);
