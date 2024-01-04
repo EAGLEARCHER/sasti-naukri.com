@@ -79,13 +79,13 @@ const login = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { userId, email, name, lastName, location } = req.body;
+
     // Validation check for required fields
     if (!email || !name || !lastName || !location) {
       throw new BadRequestError("Please provide all values");
     }
 
-    const user = await User.findOne({ _id: userId });
-
+    const user = await User.findOne({ userId });
     // Update user information
     user.email = email;
     user.name = name;
