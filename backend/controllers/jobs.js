@@ -1,13 +1,15 @@
-const { log } = require("console");
-const mongoose = require("mongoose");
 const Job = require("../models/Job");
-const moment = require("moment");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const mongoose = require("mongoose");
+const moment = require("moment");
+
 const getAllJobs = async (req, res) => {
   const { search, status, jobType, sort } = req.query;
 
-  const queryObject = {};
+  const queryObject = {
+    createdBy: req.user.userId,
+  };
 
   if (search) {
     queryObject.position = { $regex: search, $options: "i" };
@@ -46,7 +48,6 @@ const getAllJobs = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages });
 };
-
 const getJob = async (req, res) => {
   const {
     user: { userId },
@@ -57,32 +58,35 @@ const getJob = async (req, res) => {
     _id: jobId,
     createdBy: userId,
   });
-
   if (!job) {
-    throw new NotFoundError(`No such job with id ${jobId}`);
+    throw new NotFoundError(`No job with id ${jobId}`);
   }
   res.status(StatusCodes.OK).json({ job });
 };
 
-const editJob = async (req, res) => {
+const createJob = async (req, res) => {
+  req.body.createdBy = req.user.userId;
+  const job = await Job.create(req.body);
+  res.status(StatusCodes.CREATED).json({ job });
+};
+
+const updateJob = async (req, res) => {
   const {
     body: { company, position },
-    params: { id: jobId },
     user: { userId },
+    params: { id: jobId },
   } = req;
+
   if (company === "" || position === "") {
-    throw new BadRequestError("Company or Position are necessary");
+    throw new BadRequestError("Company or Position fields cannot be empty");
   }
   const job = await Job.findByIdAndUpdate(
-    {
-      _id: jobId,
-      createdBy: userId,
-    },
+    { _id: jobId, createdBy: userId },
     req.body,
     { new: true, runValidators: true }
   );
   if (!job) {
-    throw new NotFoundError(`No such job with id ${jobId}`);
+    throw new NotFoundError(`No job with id ${jobId}`);
   }
   res.status(StatusCodes.OK).json({ job });
 };
@@ -102,16 +106,8 @@ const deleteJob = async (req, res) => {
   }
   res.status(StatusCodes.OK).send();
 };
-const createJob = async (req, res) => {
-  log(req.body);
-  req.body.createdBy = req.user.userId;
-  log(req.body);
-  const job = await Job.create(req.body);
-  log(job);
-  res.status(StatusCodes.CREATED).json({ job });
-};
+
 const showStats = async (req, res) => {
-  // res.json({msg:"all stats..."});
   let stats = await Job.aggregate([
     { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     { $group: { _id: "$status", count: { $sum: 1 } } },
@@ -122,21 +118,25 @@ const showStats = async (req, res) => {
     acc[title] = count;
     return acc;
   }, {});
+
   const defaultStats = {
     pending: stats.pending || 0,
     interview: stats.interview || 0,
     declined: stats.declined || 0,
   };
+
   let monthlyApplications = await Job.aggregate([
-    { $match: { createdBy: mongoose.Types.ObjectId(req.user.Id) } },
+    { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     {
       $group: {
         _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+        count: { $sum: 1 },
       },
     },
     { $sort: { "_id.year": -1, "_id.month": -1 } },
     { $limit: 6 },
   ]);
+
   monthlyApplications = monthlyApplications
     .map((item) => {
       const {
@@ -155,10 +155,10 @@ const showStats = async (req, res) => {
 };
 
 module.exports = {
-  showStats,
-  getAllJobs,
   createJob,
-  getJob,
-  editJob,
   deleteJob,
+  getAllJobs,
+  updateJob,
+  getJob,
+  showStats,
 };

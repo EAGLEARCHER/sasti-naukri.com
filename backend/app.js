@@ -1,45 +1,49 @@
-require("dotenv").config();
-require("express-async-errors");
-const express = require("express");
-const cors = require("cors");
+require('dotenv').config();
+require('express-async-errors');
+const cors = require('cors');
+const path = require('path');
+// extra security packages
+const helmet = require('helmet');
+const xss = require('xss-clean');
+
+const express = require('express');
 const app = express();
 
-app.use(cors());
-// Database connection file/function
-const database = require("./db/connect");
+const connectDB = require('./db/connect');
+const authenticateUser = require('./middleware/authentication');
 
-const authenticateUser = require("./middleware/authentication");
-// Importing routes files
-const authRoute = require("./routes/auth-route");
-const jobsRoute = require("./routes/jobs-route");
+// routers
+const authRouter = require('./routes/auth');
+const jobsRouter = require('./routes/jobs');
+app.use(cors())
+// error handler
+const notFoundMiddleware = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
-// Middleware for parsing JSON request bodies
+// app.set('trust proxy', 1);
+
+// app.use(express.static(path.resolve(__dirname, './client/build')));
 app.use(express.json());
+app.use(helmet());
 
-// Routes
-app.use("/auth", authRoute);
-app.use(
-  "/jobs",
-   authenticateUser,
-  jobsRoute
-);
+app.use(xss());
 
-// Error handling middleware
-const notFoundMiddleware = require("./middleware/route-not-found");
-const errorHandlerMiddleware = require("./middleware/error-handler");
+// routes
+app.use('/auth', authRouter);
+app.use('/jobs', authenticateUser, jobsRouter);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+});
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-// Default route
-app.get("/", (req, res) => {
-  res.send("jobs api");
-});
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {
-    await database(process.env.MONGO_URI);
+    await connectDB(process.env.MONGO_URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
