@@ -13,9 +13,10 @@ function Job({
   jobType,
   createdAt,
   status,
+  isOwner,
 }) {
   const dispatch = useDispatch();
-
+  console.log(isOwner);
   const date = moment(createdAt).format("MMM Do, YYYY");
 
   return (
@@ -34,35 +35,47 @@ function Job({
           <JobInfo icon={<FaBriefcase />} text={jobType} />
           <div className={`status ${status}`}>{status}</div>
         </div>
-        <footer>
-          <div className="actions">
-            <Link
-              to="/add-job"
-              className="btn edit-btn"
-              onClick={() =>
-                dispatch(
-                  setEditJob({
-                    editJobId: _id,
-                    position,
-                    company,
-                    jobLocation,
-                    jobType,
-                    status,
-                  })
-                )
-              }
-            >
-              Edit
-            </Link>
+        {isOwner ? (
+          <footer>
+            <div className="actions">
+              <Link
+                to="/add-job"
+                className="btn edit-btn"
+                onClick={() =>
+                  dispatch(
+                    setEditJob({
+                      editJobId: _id,
+                      position,
+                      company,
+                      jobLocation,
+                      jobType,
+                      status,
+                    })
+                  )
+                }
+              >
+                Edit
+              </Link>
+              <button
+                type="button"
+                className="btn delete-btn"
+                onClick={() => dispatch(deleteJob(_id))}
+              >
+                delete
+              </button>
+            </div>
+          </footer>
+        ) : (
+          <>
             <button
               type="button"
-              className="btn delete-btn"
-              onClick={() => dispatch(deleteJob(_id))}
+              className="btn edit-btn"
+              // onClick={() => dispatch(deleteJob(_id))}
             >
-              delete
+              apply
             </button>
-          </div>
-        </footer>
+          </>
+        )}
       </div>
     </Wrapper>
   );

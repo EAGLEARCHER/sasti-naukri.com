@@ -1,13 +1,14 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
-import { getAllJobsThunk, showStatsThunk } from './allJobsThunk';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+import { getAllJobsThunk, showStatsThunk } from "./allJobsThunk";
+import { getUserFromLocalStorage } from "../../utils/localStorage";
 
 const initialFiltersState = {
-  search: '',
-  searchStatus: 'all',
-  searchType: 'all',
-  sort: 'latest',
-  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
 };
 
 const initialState = {
@@ -18,15 +19,17 @@ const initialState = {
   page: 1,
   stats: {},
   monthlyApplications: [],
+  isOwner: false,
   ...initialFiltersState,
 };
+const userData = getUserFromLocalStorage();
 
-export const getAllJobs = createAsyncThunk('allJobs/getJobs', getAllJobsThunk);
+export const getAllJobs = createAsyncThunk("allJobs/getJobs", getAllJobsThunk);
 
-export const showStats = createAsyncThunk('allJobs/showStats', showStatsThunk);
+export const showStats = createAsyncThunk("allJobs/showStats", showStatsThunk);
 
 const allJobsSlice = createSlice({
-  name: 'allJobs',
+  name: "allJobs",
   initialState,
   reducers: {
     showLoading: (state) => {
