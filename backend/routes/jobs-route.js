@@ -9,7 +9,7 @@ const {
   updateJob,
   getJob,
   showStats,
-} = require('../controllers/jobs');
+} = require('../controllers/jobs-controller');
 
 router.route('/').post(testUser, createJob).get(getAllJobs);
 router.route('/stats').get(showStats);
