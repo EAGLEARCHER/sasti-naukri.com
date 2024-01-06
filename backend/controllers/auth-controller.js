@@ -10,14 +10,21 @@ const register = async (req, res) => {
     const token = user.createJWT();
     res.status(StatusCodes.CREATED).json({
       user: {
-        userId: _id,
+        userId: user._id, // Fix the reference to user._id instead of _id
         email: user.email,
         name: user.username,
         token,
       },
     });
   } catch (error) {
-    // Handle error if user creation fails
+    // Handle specific error for duplicate email
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: `The email '${error.keyValue.email}' is already in use. Please choose another email.`,
+      });
+    }
+
+    // Handle other errors
     console.error(error);
     return res
       .status(StatusCodes.BAD_REQUEST)
