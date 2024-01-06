@@ -19,7 +19,6 @@ const getAllJobs = async (req, res) => {
     queryObject.jobType = jobType;
   }
   let result = Job.find(queryObject);
-
   if (sort === "latest") {
     result = result.sort("-createdAt");
   }
@@ -43,7 +42,6 @@ const getAllJobs = async (req, res) => {
 
   const totalJobs = await Job.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalJobs / limit);
-
   res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages });
 };
 const getJob = async (req, res) => {

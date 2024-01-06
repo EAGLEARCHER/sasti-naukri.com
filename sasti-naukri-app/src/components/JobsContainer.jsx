@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import { getAllJobs } from "../features/allJobs/allJobsSlice";
 import PageBtnContainer from "./PageBtnContainer";
+import { getUserFromLocalStorage } from "../utils/localStorage";
 function JobsContainer() {
   const {
     jobs,
@@ -18,6 +19,7 @@ function JobsContainer() {
     sort,
   } = useSelector((store) => store.allJobs);
   const dispatch = useDispatch();
+  const user = getUserFromLocalStorage();
 
   useEffect(() => {
     dispatch(getAllJobs());
@@ -44,7 +46,10 @@ function JobsContainer() {
       </h5>
       <div className="jobs">
         {jobs.map((job) => {
-          return <Job key={job._id} {...job} />;
+          console.log(job);
+          const isOwner = job.createdBy === user.id;
+          console.log(isOwner);
+          return <Job key={job._id} {...job} isOwner={isOwner}  />;
         })}
       </div>
       {numOfPages > 1 && <PageBtnContainer />}
