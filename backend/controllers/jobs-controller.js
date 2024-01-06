@@ -1,4 +1,4 @@
-const Job = require("../models/Job");
+const Job = require("../models/Job-model");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const mongoose = require("mongoose");
@@ -7,9 +7,7 @@ const moment = require("moment");
 const getAllJobs = async (req, res) => {
   const { search, status, jobType, sort } = req.query;
 
-  const queryObject = {
-    createdBy: req.user.userId,
-  };
+  const queryObject = {};
 
   if (search) {
     queryObject.position = { $regex: search, $options: "i" };
