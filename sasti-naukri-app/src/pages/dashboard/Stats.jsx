@@ -13,10 +13,15 @@ function Stats() {
   useEffect(() => {
     dispatch(showStats());
   }, []);
+  console.log(monthlyApplications);
   return (
     <>
       <StatsContainer />
-      {monthlyApplications.length > 0 && <ChartsContainer />}
+      {monthlyApplications.length > 0 ? (
+        <ChartsContainer />
+      ) : (
+        <p>Please add Job to see Statistics...</p>
+      )}
     </>
   );
 }
