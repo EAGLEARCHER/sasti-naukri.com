@@ -46,9 +46,7 @@ function JobsContainer() {
       </h5>
       <div className="jobs">
         {jobs.map((job) => {
-          console.log(job);
           const isOwner = job.createdBy === user.id;
-          console.log(isOwner);
           return <Job key={job._id} {...job} isOwner={isOwner}  />;
         })}
       </div>

@@ -3,13 +3,12 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const register = async (req, res) => {
-  // const userData = {
-  //   name: req.body.username,
-  //   email: req.body.email,
-  //   password: req.body.password,
-  // };
-
-  const user = await User.create({ ...req.body });
+  const userData = {
+    name: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+  };
+  const user = await User.create({ ...userData });
 
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).json({

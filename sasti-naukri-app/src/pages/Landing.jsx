@@ -2,7 +2,7 @@ import main from "../assets/images/main.svg";
 import Wrapper from "../assets/wrappers/LandingPage";
 import { Logo } from "../components";
 import { Link } from "react-router-dom";
-export default function Landing () {
+export default function Landing() {
   return (
     <Wrapper>
       <nav>
@@ -12,12 +12,16 @@ export default function Landing () {
         {/* info */}
         <div className="info">
           <h1>
-            job <span>tracking</span> app
+            Sasti <span>Naukri.com</span> app
           </h1>
           <p>
-            Crucifix narwhal street art asymmetrical, humblebrag tote bag pop-up
-            fixie raclette taxidermy craft beer. Brunch bitters synth, VHS
-            crucifix heirloom meggings bicycle rights.
+            Discover boundless career opportunities at SastiNaukri.com, where
+            finding your dream job is simplified. With an extensive array of
+            listings spanning diverse industries and experience levels, our
+            intuitive search filters streamline your quest for the perfect role.
+            Receive tailored job alerts, access our resume-building tools, and
+            benefit from expert career advice all in one secure platform. Join
+            us in shaping your professional future today with SastiNaukri.com.
           </p>
           <Link to="/register" className="btn btn-hero">
             Login/Register
@@ -27,5 +31,4 @@ export default function Landing () {
       </div>
     </Wrapper>
   );
-};
-
+}
