@@ -29,7 +29,7 @@ export default function Navbar() {
             onClick={() => setShowLogout(!showLogout)}
           >
             <FaUserCircle />
-            {/* {user?.name} */}
+            {user?.name}
             <FaCaretDown />
           </button>
           <div className={

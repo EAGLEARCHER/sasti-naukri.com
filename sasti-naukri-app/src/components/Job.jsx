@@ -16,7 +16,6 @@ function Job({
   isOwner,
 }) {
   const dispatch = useDispatch();
-  console.log(isOwner);
   const date = moment(createdAt).format("MMM Do, YYYY");
 
   return (

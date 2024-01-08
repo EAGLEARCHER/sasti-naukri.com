@@ -61,18 +61,18 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
-        const user = payload;
+        const { user } = payload;
         state.isLoading = false;
         state.user = user;
         addUserToLocalStorage(user);
-        toast.success(`Hello There ${user.username}`);
+        toast.success(`Hello There ${user.name}`);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
         if (action.type === "user/registerUser/rejected") {
           toast.error("Use new Email.....");
-        }else{
-          toast.error("Internal Server ERROR")
+        } else {
+          toast.error("Internal Server ERROR");
         }
       })
       .addCase(loginUser.pending, (state) => {
