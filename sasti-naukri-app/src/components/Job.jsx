@@ -69,7 +69,7 @@ function Job({
             <button
               type="button"
               className="btn edit-btn"
-              // onClick={() => dispatch(deleteJob(_id))}
+              onClick={() => console.log("heheh")}
             >
               apply
             </button>
