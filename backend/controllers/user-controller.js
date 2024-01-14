@@ -13,6 +13,7 @@ const register = async (req, res) => {
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).json({
     user: {
+      id: user._id,
       email: user.email,
       lastName: user.lastName,
       location: user.location,
@@ -75,8 +76,22 @@ const updateUser = async (req, res) => {
   });
 };
 
+const deleteAccount = async (req, res) => {
+  const deletedUser = await User.deleteOne({ _id: req.body.userId });
+  if (deletedUser.deletedCount === 0) {
+    throw new BadRequestError("User not Found");
+  }
+  res.status(StatusCodes.OK).json(deletedUser);
+};
+
+const applyJob = async (req, res) => {
+  console.log("Job Applied..");
+  return;
+};
 module.exports = {
   register,
   login,
   updateUser,
+  deleteAccount,
+  applyJob,
 };

@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormRow } from "../../components";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { updateUser } from "../../features/user/userSlice";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+import {
+  applyJob,
+  deleteAccount,
+  updateUser,
+} from "../../features/user/userSlice";
+import { useNavigate } from "react-router";
 
 function Profile() {
-  const { isLoading, user } = useSelector((store) => store.user);
+  const { isLoading, user, accountDeleted } = useSelector(
+    (store) => store.user
+  );
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     userId: user.userId,
@@ -31,7 +41,14 @@ function Profile() {
     const value = e.target.value;
     setUserData({ ...userData, [name]: value });
   };
-
+  const handleDeleteAccount = (e) => {
+    dispatch(deleteAccount({ userId: user.id }));
+  };
+  useEffect(() => {
+    if (accountDeleted) {
+      navigate("/", { replace: true });
+    }
+  }, [accountDeleted]);
   return (
     <Wrapper>
       <form className="form" onSubmit={handleSubmit}>
@@ -67,6 +84,42 @@ function Profile() {
           </button>
         </div>
       </form>
+
+      <Popup
+        trigger={
+          <button className="btn btn-danger" style={{ marginTop: "2%" }}>
+            delete Account
+          </button>
+        }
+        modal
+        nested
+      >
+        {(close) => (
+          <div className="modal">
+            <div className="content">
+              You Really want to delete your account
+            </div>
+            <div>
+              <button
+                className="btn btn-danger"
+                onClick={() => handleDeleteAccount()}
+              >
+                Yes
+              </button>
+              <button className="btn btn-hipster" onClick={() => close()}>
+                No
+              </button>
+            </div>
+          </div>
+        )}
+      </Popup>
+      <button
+        onClick={() => {
+          dispatch(applyJob());
+        }}
+      >
+        applyJob
+      </button>
     </Wrapper>
   );
 }
