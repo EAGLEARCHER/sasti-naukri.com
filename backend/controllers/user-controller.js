@@ -84,14 +84,9 @@ const deleteAccount = async (req, res) => {
   res.status(StatusCodes.OK).json(deletedUser);
 };
 
-const applyJob = async (req, res) => {
-  console.log("Job Applied..");
-  return;
-};
 module.exports = {
   register,
   login,
   updateUser,
   deleteAccount,
-  applyJob,
 };

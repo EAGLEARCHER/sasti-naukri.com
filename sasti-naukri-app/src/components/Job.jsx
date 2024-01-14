@@ -1,10 +1,12 @@
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Job";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import JobInfo from "./JobInfo";
 import moment from "moment";
-import { deleteJob, setEditJob } from "../features/job/jobSlice";
+import { applyJob, deleteJob, setEditJob } from "../features/job/jobSlice";
+import { getUserFromLocalStorage } from "../utils/localStorage";
+import { toast } from "react-toastify";
 function Job({
   _id,
   position,
@@ -14,10 +16,22 @@ function Job({
   createdAt,
   status,
   isOwner,
+  createdBy,
 }) {
   const dispatch = useDispatch();
   const date = moment(createdAt).format("MMM Do, YYYY");
-
+  const userData = getUserFromLocalStorage();
+  const handleApplication = (e) => {
+    const applicationData = {
+      recruiterId: createdBy,
+      userId: userData.id,
+    };
+    if (!createdBy || !userData.id) {
+      toast.error("Not provided all Details....");
+    } else {
+      dispatch(applyJob({ applicationData }));
+    }
+  };
   return (
     <Wrapper>
       <header>
@@ -69,7 +83,7 @@ function Job({
             <button
               type="button"
               className="btn edit-btn"
-              onClick={() => console.log("heheh")}
+              onClick={() => handleApplication()}
             >
               apply
             </button>

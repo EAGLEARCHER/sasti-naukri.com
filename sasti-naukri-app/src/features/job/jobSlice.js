@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
-import { createJobThunk, deleteJobThunk, editJobThunk } from "./jobThunk";
+import { applyJobThunk, createJobThunk, deleteJobThunk, editJobThunk } from "./jobThunk";
 const initialState = {
   isLoading: false,
   position: "",
@@ -20,6 +20,9 @@ export const createJob = createAsyncThunk("job/createJob", createJobThunk);
 export const deleteJob = createAsyncThunk("job/deleteJob", deleteJobThunk);
 
 export const editJob = createAsyncThunk("job/editJob", editJobThunk);
+
+export const applyJob = createAsyncThunk("job/applyJob", applyJobThunk );
+
 const jobSlice = createSlice({
   name: "job",
   initialState,
@@ -64,6 +67,17 @@ const jobSlice = createSlice({
         toast.success("Job Modified...");
       })
       .addCase(editJob.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(applyJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(applyJob.fulfilled, (state) => {
+        state.isLoading = false;
+        toast.success("Job Applied...");
+      })
+      .addCase(applyJob.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(payload);
       });

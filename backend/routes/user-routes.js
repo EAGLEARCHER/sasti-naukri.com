@@ -6,7 +6,6 @@ const {
   login,
   updateUser,
   deleteAccount,
-  applyJob,
 } = require("../controllers/user-controller");
 const testUser = require("../middleware/testUser");
 
@@ -31,10 +30,5 @@ router.delete(
   "/deleteAccount",
   //  authenticateUser,
   deleteAccount
-);
-router.patch(
-  "/job-application",
-  // authenticateUser,
-  applyJob
 );
 module.exports = router;
