@@ -150,6 +150,17 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
 
+const updateApplyers = async (req, res) => {
+  const userId = req.body.applicationData.userId;
+  const recruiterId = req.body.applicationData.recruiterId;
+  const updateRes = await Job.updateOne(
+    { createdBy: recruiterId },
+    { $push: { applyers: userId } }
+  );
+  // res.status(StatusCodes.OK);
+  res.status(StatusCodes.CREATED).json(updateRes);
+};
+
 module.exports = {
   createJob,
   deleteJob,
@@ -157,4 +168,5 @@ module.exports = {
   updateJob,
   getJob,
   showStats,
+  updateApplyers,
 };

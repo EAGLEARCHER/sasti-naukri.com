@@ -5,11 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import {
-  applyJob,
-  deleteAccount,
-  updateUser,
-} from "../../features/user/userSlice";
+import { deleteAccount, updateUser } from "../../features/user/userSlice";
 import { useNavigate } from "react-router";
 
 function Profile() {
@@ -113,13 +109,6 @@ function Profile() {
           </div>
         )}
       </Popup>
-      <button
-        onClick={() => {
-          dispatch(applyJob());
-        }}
-      >
-        applyJob
-      </button>
     </Wrapper>
   );
 }

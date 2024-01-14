@@ -48,14 +48,3 @@ export const deleteUserThunk = async (url, userId, thunkAPI) => {
     return checkForUnauthorizedResponse(error, thunkAPI);
   }
 };
-
-export const applyJobThunk = async (url, job, user, thunkAPI) => {
-  try {
-    const resp = await customFetch.patch(url, job, user);
-    if (!resp.status) throw new Error("Server error");
-    else return resp.data;
-  } catch (err) {
-    console.log("Error in applying for a job", err);
-    return;
-  }
-};

@@ -11,7 +11,6 @@ import {
   updateUserThunk,
   clearStoreThunk,
   deleteUserThunk,
-  applyJobThunk,
 } from "./userThunk";
 
 const initialState = {
@@ -47,12 +46,7 @@ export const deleteAccount = createAsyncThunk(
     return deleteUserThunk("/user/deleteAccount", userId, thunkAPI);
   }
 );
-export const applyJob = createAsyncThunk(
-  "user/applyJob",
-  async (user, thunkAPI) => {
-    return applyJobThunk("/user/job-application", user, thunkAPI);
-  }
-);
+
 export const clearStore = createAsyncThunk("user/clearStore", clearStoreThunk);
 const userSlice = createSlice({
   name: "user",
@@ -96,7 +90,6 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         const { user } = payload;
         state.isLoading = false;
-        console.log(user);
         state.user = user;
         addUserToLocalStorage(user);
         toast.success(`Welcome Back ${user.name}`);
@@ -130,16 +123,6 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(deleteAccount.rejected, (state, { payload }) => {
-        state.isLoading = false;
-        toast.error(payload);
-      })
-      .addCase(applyJob.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(applyJob.fulfilled, (state, { payload }) => {
-        toast.success(`Applied Job Successfully`);
-      })
-      .addCase(applyJob.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(payload);
       })

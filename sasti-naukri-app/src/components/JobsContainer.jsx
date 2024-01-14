@@ -47,7 +47,7 @@ function JobsContainer() {
       <div className="jobs">
         {jobs.map((job) => {
           const isOwner = job.createdBy === user.id;
-          return <Job key={job._id} {...job} isOwner={isOwner}  />;
+          return <Job key={job._id} {...job} isOwner={isOwner} />;
         })}
       </div>
       {numOfPages > 1 && <PageBtnContainer />}
