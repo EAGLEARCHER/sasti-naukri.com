@@ -46,7 +46,7 @@ function Profile() {
   };
   useEffect(() => {
     if (accountDeleted) {
-      navigate("/", { replace: true });
+      navigate("/landing", { replace: true });
     }
   }, [accountDeleted]);
   return (

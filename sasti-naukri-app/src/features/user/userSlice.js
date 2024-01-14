@@ -43,7 +43,7 @@ export const updateUser = createAsyncThunk(
 );
 export const deleteAccount = createAsyncThunk(
   "user/deleteAccount",
-  async ({userId}, thunkAPI) => {
+  async ({ userId }, thunkAPI) => {
     return deleteUserThunk("/user/deleteAccount", userId, thunkAPI);
   }
 );
@@ -119,17 +119,15 @@ const userSlice = createSlice({
         state.isLoading = false;
         toast.error(payload);
       })
-      .addCase(clearStore.rejected, () => {
-        toast.error("There was an error..");
-      })
       .addCase(deleteAccount.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(deleteAccount.fulfilled, (state, { payload }) => {
         removeUserFromLocalStorage();
-        accountDeleted = true;
-        state.isLoading = false;
+        state.accountDeleted = true;
         toast.success(`User deleted Successfully`);
+        clearStore("Logging Out.....");
+        state.isLoading = false;
       })
       .addCase(deleteAccount.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -144,6 +142,9 @@ const userSlice = createSlice({
       .addCase(applyJob.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(payload);
+      })
+      .addCase(clearStore.rejected, () => {
+        toast.error("There was an error..");
       });
   },
 });
