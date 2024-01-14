@@ -10,32 +10,47 @@ import {
   registerUserThunk,
   updateUserThunk,
   clearStoreThunk,
+  deleteUserThunk,
+  applyJobThunk,
 } from "./userThunk";
 
 const initialState = {
   isLoading: false,
   isSidebarOpen: false,
   user: getUserFromLocalStorage(),
+  accountDeleted: false,
 };
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (user, thunkAPI) => {
-    return registerUserThunk("/auth/register", user, thunkAPI);
+    return registerUserThunk("/user/auth/register", user, thunkAPI);
   }
 );
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (user, thunkAPI) => {
-    return loginUserThunk("/auth/login", user, thunkAPI);
+    return loginUserThunk("/user/auth/login", user, thunkAPI);
   }
 );
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (user, thunkAPI) => {
-    return updateUserThunk("/auth/updateUser", user, thunkAPI);
+    return updateUserThunk("/user/update", user, thunkAPI);
+  }
+);
+export const deleteAccount = createAsyncThunk(
+  "user/deleteAccount",
+  async ({userId}, thunkAPI) => {
+    return deleteUserThunk("/user/deleteAccount", userId, thunkAPI);
+  }
+);
+export const applyJob = createAsyncThunk(
+  "user/applyJob",
+  async (user, thunkAPI) => {
+    return applyJobThunk("/user/job-application", user, thunkAPI);
   }
 );
 export const clearStore = createAsyncThunk("user/clearStore", clearStoreThunk);
@@ -81,6 +96,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         const { user } = payload;
         state.isLoading = false;
+        console.log(user);
         state.user = user;
         addUserToLocalStorage(user);
         toast.success(`Welcome Back ${user.name}`);
@@ -105,6 +121,29 @@ const userSlice = createSlice({
       })
       .addCase(clearStore.rejected, () => {
         toast.error("There was an error..");
+      })
+      .addCase(deleteAccount.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteAccount.fulfilled, (state, { payload }) => {
+        removeUserFromLocalStorage();
+        accountDeleted = true;
+        state.isLoading = false;
+        toast.success(`User deleted Successfully`);
+      })
+      .addCase(deleteAccount.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(applyJob.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(applyJob.fulfilled, (state, { payload }) => {
+        toast.success(`Applied Job Successfully`);
+      })
+      .addCase(applyJob.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
       });
   },
 });

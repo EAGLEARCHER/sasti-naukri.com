@@ -13,7 +13,6 @@ function Stats() {
   useEffect(() => {
     dispatch(showStats());
   }, []);
-  console.log(monthlyApplications);
   return (
     <>
       <StatsContainer />
