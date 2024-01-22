@@ -27,21 +27,21 @@ To run the project locally, follow these steps:
 
 1. Navigate to the `sasti-naukri-app` directory:
 
-    ```bash
-    cd sasti-naukri-app
-    ```
+   ```bash
+   cd sasti-naukri-app
+   ```
 
 2. Install dependencies:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. Start the development server:
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 4. Access the frontend at: `http://localhost:PORT` (the specified port).
 
@@ -49,23 +49,38 @@ To run the project locally, follow these steps:
 
 1. Navigate to the `backend` directory:
 
-    ```bash
-    cd backend
-    ```
+   ```bash
+   cd backend
+   ```
 
 2. Install dependencies:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. Start the backend server:
 
-    ```bash
-    npm start
-    ```
+   ```bash
+   npm start
+   ```
 
 4. Access the backend endpoints at: `http://localhost:PORT` (the specified port).
 
+## Screenshots
+
+### Landing
+
+![Screenshot 2](./images/landing.jpeg)
+
+### Dashboard
+
+![Screenshot 1](./images/dashboard1.jpeg)
+
+### Search Section
+
+![Screenshot 2](./images/dashboard.jpeg)
+
+Caption for the second screenshot.
 
 Feel free to explore and modify the project to suit your needs. Happy coding!
