@@ -20,15 +20,6 @@ const apiLimiter = rateLimiter({
 
 router.post("/auth/register", apiLimiter, register);
 router.post("/auth/login", apiLimiter, login);
-router.patch(
-  "/update",
-  // authenticateUser,
-  //  testUser,
-  updateUser
-);
-router.delete(
-  "/deleteAccount",
-  //  authenticateUser,
-  deleteAccount
-);
+router.patch("/update", authenticateUser, updateUser);
+router.delete("/deleteAccount", authenticateUser, deleteAccount);
 module.exports = router;

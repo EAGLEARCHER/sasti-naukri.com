@@ -31,7 +31,7 @@ export default function App() {
         <Route path="register" element={<Register />} />
         <Route path="*" element={<Error />} />
       </Routes>
-      <ToastContainer position="top-center" autoClose={1000} />
+      <ToastContainer position="top-center" autoClose={5000} />
     </BrowserRouter>
   );
 }

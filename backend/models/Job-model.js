@@ -39,6 +39,7 @@ const JobSchema = new mongoose.Schema(
         required: [true, "Can not read UserId"],
       },
     ],
+    default: [],
   },
   { timestamps: true }
 );
